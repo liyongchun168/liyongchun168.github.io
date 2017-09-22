@@ -87,7 +87,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/09/22/linux下代理上网总结/" data-id="cj7vvc5370004xipvcx8krlum" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/09/22/linux下代理上网总结/" data-id="cj7vviw7p00052spvq7tqgv9w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -132,9 +132,136 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/09/22/hello-world/" data-id="cj7vvc52l0001xipvg8w9uu4e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/09/22/hello-world/" data-id="cj7vviw7a00042spvv0yaq9g5" class="article-share-link">Share</a>
       
       
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-nodejs-to-exe" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/22/nodejs-to-exe/" class="article-date">
+  <time datetime="2017-06-22T03:27:53.000Z" itemprop="datePublished">2017-06-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Node-js/">Node.js</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/22/nodejs-to-exe/">如何将nodejs制作的控制台程序打包成exe</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>虽然控制台程序本来就是没有界面的，打包成exe有点多余，但是如果想把写好的代码发给一个非程序员使用，可能还要教人家如何装node，如何运行…… 麻烦死了！</p>
+<p>本文采用的方法是先用批处理包装，然后再将批处理打包成exe，批处理转exe的工具很多，我这里随便找了一个<code>Bat To Exe Converter</code>来实现。</p>
+<h1 id="正式开始"><a href="#正式开始" class="headerlink" title="正式开始"></a>正式开始</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们肯定希望生成的exe是这样的：</p>
+<ol>
+<li>双击即可运行，临时文件不能生成在当前目录（这样看起来才像个独立的exe）；</li>
+<li>退出程序时自动删除临时文件（不然时间越久临时目录越大）；</li>
+<li>可以任意设置图标；</li>
+<li>虽然文件输出到临时目录，但是工作目录最好是exe的启动目录；</li>
+</ol>
+<p>上面1、2、3这三点都比较好实现，关键是第4点。</p>
+<h2 id="测试文件"><a href="#测试文件" class="headerlink" title="测试文件"></a>测试文件</h2><p>我们写一个最简单的控制台程序，只为了验证当前目录，<code>test.js</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">'当前工作目录：'</span> + process.cwd());</div></pre></td></tr></table></figure>
+<h2 id="批处理封装"><a href="#批处理封装" class="headerlink" title="批处理封装"></a>批处理封装</h2><p>批处理可以设置窗口标题以及字体颜色等，所以我们用批处理再包装一层：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@<span class="built_in">echo</span> off</div><div class="line">node test.js</div><div class="line">pause</div></pre></td></tr></table></figure>
+<p>假设以上文件在<code>D:\test</code>下面，我们在<code>E:\exe</code>下面执行<code>call D:\test\test.bat</code>，很显然，由于批处理的默认当前目录在E盘，所以报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">E:\exe&gt;call D:\<span class="built_in">test</span>\test.bat</div><div class="line">module.js:471</div><div class="line">    throw err;</div><div class="line">    ^</div><div class="line"></div><div class="line">Error: Cannot find module <span class="string">'E:\exe\test.js'</span></div><div class="line">    at Function.Module._resolveFilename (module.js:469:15)</div><div class="line">    at Function.Module._load (module.js:417:25)</div><div class="line">    at Module.runMain (module.js:604:10)</div><div class="line">    at run (bootstrap_node.js:394:7)</div><div class="line">    at startup (bootstrap_node.js:149:9)</div><div class="line">    at bootstrap_node.js:509:3</div></pre></td></tr></table></figure>
+<p>所以我们把批处理改成这样（同时为了后面测试方便，我们多输出了2个参数）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@<span class="built_in">echo</span> off</div><div class="line"><span class="built_in">echo</span> %<span class="built_in">cd</span>%</div><div class="line"><span class="built_in">echo</span> %~dpf0</div><div class="line">node %~dp0%test.js</div><div class="line">pause</div></pre></td></tr></table></figure>
+<p>运行之后正常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">E:\exe&gt;call D:\<span class="built_in">test</span>\test.bat</div><div class="line">E:\exe</div><div class="line">D:\<span class="built_in">test</span>\test.bat</div><div class="line">当前工作目录：E:\exe</div><div class="line">请按任意键继续. . .</div></pre></td></tr></table></figure>
+<h2 id="尝试使用好压打包成exe"><a href="#尝试使用好压打包成exe" class="headerlink" title="尝试使用好压打包成exe"></a>尝试使用好压打包成exe</h2><p>使用好压的自解压模式可以轻松将批处理打包成exe（下图为900多kb的gif，耐心等待加载）：</p>
+<p><img src="http://image.liuxianan.com/201707/20170727_163238_518_3340.gif" alt="使用好压打包exe"></p>
+<p>只可惜打包之后，它的工作目录默认是解压的临时目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">当前工作目录：C:\Users\Administrator\AppData\Local\Temp\HZ<span class="variable">$D</span>.816.1632</div><div class="line">请按任意键继续. . .</div></pre></td></tr></table></figure>
+<p>尝试了一番还是没找到解决办法，所以只能放弃了，如果有人知道还烦请告知。</p>
+<h2 id="使用第三方工具"><a href="#使用第三方工具" class="headerlink" title="使用第三方工具"></a>使用第三方工具</h2><p>我使用了一个叫<a href="http://www.pc6.com/softview/SoftView_31106.html" target="_blank" rel="external">Bat To Exe Converter</a>的工具：</p>
+<p><img src="http://image.liuxianan.com/201707/20170727_151345_112_3422.png" alt=""></p>
+<p><img src="http://image.liuxianan.com/201707/20170727_151402_027_8982.png" alt=""></p>
+<p><img src="http://image.liuxianan.com/201707/20170727_151414_892_9578.png" alt=""></p>
+<p>配置好以上几步之后，点击左下角的编译就OK了：</p>
+<p><img src="http://image.liuxianan.com/201707/20170727_160359_291_3179.png" alt=""></p>
+<p>为了对比，我们把双击生成的test.exe也移到<code>E:\exe</code>下面测试：</p>
+<p><img src="http://image.liuxianan.com/201707/20170727_154210_243_1912.png" alt=""></p>
+<p>可以发现，这个工具把<code>%cd%</code>和<code>%~dpf0</code>和普通方式对调了一下，工作目录是临时目录，而<code>%0</code>却成了启动exe的路径，好吧，这样也没关系，我们这样改造一番就OK了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@<span class="built_in">echo</span> off</div><div class="line">:: 将当前目录保存起来</div><div class="line"><span class="built_in">set</span> tempPath=%<span class="built_in">cd</span>%</div><div class="line">:: 定位到exe所在目录</div><div class="line">%~d0</div><div class="line"><span class="built_in">cd</span> %~dp0</div><div class="line">:: 执行临时目录的js文件</div><div class="line">node %tempPath%\test.js</div><div class="line">pause</div></pre></td></tr></table></figure>
+<p><img src="http://image.liuxianan.com/201707/20170727_155429_501_8294.png" alt=""></p>
+<p>至此，我们完美地解决了最开始说的第4点问题^_^。</p>
+<h1 id="实例：nginx配置文件监听工具"><a href="#实例：nginx配置文件监听工具" class="headerlink" title="实例：nginx配置文件监听工具"></a>实例：nginx配置文件监听工具</h1><p>别整些没用的，我们来点实际的。实际工作中经常需要改动nginx配置文件，每次改完都需要reload一下感觉很麻烦，于是简单写了个配置文件监听工具，一改动就自动刷新，代码如下：</p>
+<p>nginx-conf-watcher.js：</p>
+<p>```js<br>const fs = requir</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/22/nodejs-to-exe/" data-id="cj7vviw7t00062spv9g87ymgd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs-exe/">nodejs,exe</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-aliyun-ssh-connection-closed-by-foreign-host" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/18/aliyun-ssh-connection-closed-by-foreign-host/" class="article-date">
+  <time datetime="2016-08-18T05:23:58.000Z" itemprop="datePublished">2016-08-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/网站建设/">网站建设</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/18/aliyun-ssh-connection-closed-by-foreign-host/">阿里云服务器SSH无法连接：Connection closed by foreign host</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h1><p>之前一直好好的，今天突然连接不上了，报一个什么<code>Connection closed by foreign host</code>的错：</p>
+<p><img src="http://image.liuxianan.com/201608/20160818_132141_787_1258.png" alt=""></p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>登录阿里云后台，进入实例详�</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/08/18/aliyun-ssh-connection-closed-by-foreign-host/" data-id="cj7vviw6300002spvi5m0wmv2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里云-ssh-连接-失败-云服务器/">阿里云,ssh,连接,失败,云服务器</a></li></ul>
+
     </footer>
   </div>
   
@@ -256,7 +383,7 @@ $ git config --global user.email  &quot;xxx@qq.com&quot;// 填写你的github注
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/08/18/build-blog-website-by-hexo-github/" data-id="cj7vvc5230000xipvkwnpjd83" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/08/18/build-blog-website-by-hexo-github/" data-id="cj7vviw6u00012spvcahcqojv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo-github-网站-搭建-个人-博客-git/">hexo,github,网站,搭建,个人,博客,git</a></li></ul>
@@ -277,7 +404,7 @@ $ git config --global user.email  &quot;xxx@qq.com&quot;// 填写你的github注
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/网站建设/">网站建设</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网站建设/">网站建设</a></li></ul>
     </div>
   </div>
 
@@ -287,7 +414,7 @@ $ git config --global user.email  &quot;xxx@qq.com&quot;// 填写你的github注
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo-github-网站-搭建-个人-博客-git/">hexo,github,网站,搭建,个人,博客,git</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo-github-网站-搭建-个人-博客-git/">hexo,github,网站,搭建,个人,博客,git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-exe/">nodejs,exe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阿里云-ssh-连接-失败-云服务器/">阿里云,ssh,连接,失败,云服务器</a></li></ul>
     </div>
   </div>
 
@@ -297,7 +424,7 @@ $ git config --global user.email  &quot;xxx@qq.com&quot;// 填写你的github注
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo-github-网站-搭建-个人-博客-git/" style="font-size: 10px;">hexo,github,网站,搭建,个人,博客,git</a>
+      <a href="/tags/hexo-github-网站-搭建-个人-博客-git/" style="font-size: 10px;">hexo,github,网站,搭建,个人,博客,git</a> <a href="/tags/nodejs-exe/" style="font-size: 10px;">nodejs,exe</a> <a href="/tags/阿里云-ssh-连接-失败-云服务器/" style="font-size: 10px;">阿里云,ssh,连接,失败,云服务器</a>
     </div>
   </div>
 
@@ -306,7 +433,7 @@ $ git config --global user.email  &quot;xxx@qq.com&quot;// 填写你的github注
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li></ul>
     </div>
   </div>
 
@@ -324,6 +451,14 @@ $ git config --global user.email  &quot;xxx@qq.com&quot;// 填写你的github注
         
           <li>
             <a href="/2017/09/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/22/nodejs-to-exe/">如何将nodejs制作的控制台程序打包成exe</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/18/aliyun-ssh-connection-closed-by-foreign-host/">阿里云服务器SSH无法连接：Connection closed by foreign host</a>
           </li>
         
           <li>
