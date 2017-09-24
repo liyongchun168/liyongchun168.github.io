@@ -81,7 +81,7 @@
 <meta property="og:site_name" content="liyongchun">
 <meta property="og:description" content="本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/2017/09/22/linux下代理上网总结/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-24T08:56:41.154Z">
+<meta property="og:updated_time" content="2017-09-24T09:00:38.944Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux下代理上网总结">
 <meta name="twitter:description" content="本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/2017/09/22/linux下代理上网总结/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！">
@@ -327,7 +327,7 @@
 <p>添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">proxy=http://username:password@yourproxy:808</div></pre></td></tr></table></figure></p>
 <h1 id="wget代理设置"><a href="#wget代理设置" class="headerlink" title="wget代理设置"></a>wget代理设置</h1><p>打开wget的配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim ~/.wgetrc</div></pre></td></tr></table></figure></p>
 <p>添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">https_proxy = http://username:password@yourproxy:808/</div><div class="line">http_proxy = http://username:password@yourproxy:808/</div><div class="line">ftp_proxy = http://username:password@yourproxy:808/</div></pre></td></tr></table></figure></p>
-<p>并将proxy打开<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># If you do not want to use proxy at all, set this to off.</div><div class="line">use_proxy = on</div></pre></td></tr></table></figure></p>
+<p>并将proxy打开<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#If you do not want to use proxy at all, set this to off.</div><div class="line">use_proxy = on</div></pre></td></tr></table></figure></p>
 <h1 id="git代理设置"><a href="#git代理设置" class="headerlink" title="git代理设置"></a>git代理设置</h1><p>打开git的配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim ~/.gitconfig</div></pre></td></tr></table></figure></p>
 <p>添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[http]</div><div class="line">	proxy = http://username:password@yourproxy:808/</div><div class="line">[https]</div><div class="line">	proxy = https://username:password@yourproxy:808/</div><div class="line">[url &quot;https://github.com/&quot;]</div><div class="line">	insteadOf = git@github.com:</div></pre></td></tr></table></figure></p>
 
