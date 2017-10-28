@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="nodejs,exe," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="本文首发于 http://liuxianan.com，原文地址：http://blog.liuxianan.com/nodejs-to-exe.html，转载请注明署名“liuxianan”并在显眼位置保留原文链接，谢谢！">
+<meta name="keywords" content="nodejs,exe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何将nodejs制作的控制台程序打包成exe">
+<meta property="og:url" content="http://yoursite.com/2017/06/22/nodejs-to-exe/index.html">
+<meta property="og:site_name" content="liyongchun">
+<meta property="og:description" content="本文首发于 http://liuxianan.com，原文地址：http://blog.liuxianan.com/nodejs-to-exe.html，转载请注明署名“liuxianan”并在显眼位置保留原文链接，谢谢！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://image.liuxianan.com/201707/20170727_163238_518_3340.gif">
+<meta property="og:image" content="http://image.liuxianan.com/201707/20170727_151345_112_3422.png">
+<meta property="og:image" content="http://image.liuxianan.com/201707/20170727_151402_027_8982.png">
+<meta property="og:image" content="http://image.liuxianan.com/201707/20170727_151414_892_9578.png">
+<meta property="og:image" content="http://image.liuxianan.com/201707/20170727_160359_291_3179.png">
+<meta property="og:image" content="http://image.liuxianan.com/201707/20170727_154210_243_1912.png">
+<meta property="og:image" content="http://image.liuxianan.com/201707/20170727_155429_501_8294.png">
+<meta property="og:updated_time" content="2017-09-22T13:25:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何将nodejs制作的控制台程序打包成exe">
+<meta name="twitter:description" content="本文首发于 http://liuxianan.com，原文地址：http://blog.liuxianan.com/nodejs-to-exe.html，转载请注明署名“liuxianan”并在显眼位置保留原文链接，谢谢！">
+<meta name="twitter:image" content="http://image.liuxianan.com/201707/20170727_163238_518_3340.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/22/nodejs-to-exe/"/>
+
+
+
+
+
+  <title>如何将nodejs制作的控制台程序打包成exe | liyongchun</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">liyongchun</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">备忘录</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/22/nodejs-to-exe/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liyongchun">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="liyongchun">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何将nodejs制作的控制台程序打包成exe</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-22T11:27:53+08:00">
+                2017-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node-js/" itemprop="url" rel="index">
+                    <span itemprop="name">Node.js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  本文首发于 http://liuxianan.com，原文地址：http://blog.liuxianan.com/nodejs-to-exe.html，转载请注明署名“liuxianan”并在显眼位置保留原文链接，谢谢！
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>虽然控制台程序本来就是没有界面的，打包成exe有点多余，但是如果想把写好的代码发给一个非程序员使用，可能还要教人家如何装node，如何运行…… 麻烦死了！</p>
+<p>本文采用的方法是先用批处理包装，然后再将批处理打包成exe，批处理转exe的工具很多，我这里随便找了一个<code>Bat To Exe Converter</code>来实现。</p>
+<h1 id="正式开始"><a href="#正式开始" class="headerlink" title="正式开始"></a>正式开始</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>我们肯定希望生成的exe是这样的：</p>
+<ol>
+<li>双击即可运行，临时文件不能生成在当前目录（这样看起来才像个独立的exe）；</li>
+<li>退出程序时自动删除临时文件（不然时间越久临时目录越大）；</li>
+<li>可以任意设置图标；</li>
+<li>虽然文件输出到临时目录，但是工作目录最好是exe的启动目录；</li>
+</ol>
+<p>上面1、2、3这三点都比较好实现，关键是第4点。</p>
+<h2 id="测试文件"><a href="#测试文件" class="headerlink" title="测试文件"></a>测试文件</h2><p>我们写一个最简单的控制台程序，只为了验证当前目录，<code>test.js</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">'当前工作目录：'</span> + process.cwd());</div></pre></td></tr></table></figure>
+<h2 id="批处理封装"><a href="#批处理封装" class="headerlink" title="批处理封装"></a>批处理封装</h2><p>批处理可以设置窗口标题以及字体颜色等，所以我们用批处理再包装一层：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@<span class="built_in">echo</span> off</div><div class="line">node test.js</div><div class="line">pause</div></pre></td></tr></table></figure>
+<p>假设以上文件在<code>D:\test</code>下面，我们在<code>E:\exe</code>下面执行<code>call D:\test\test.bat</code>，很显然，由于批处理的默认当前目录在E盘，所以报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">E:\exe&gt;call D:\<span class="built_in">test</span>\test.bat</div><div class="line">module.js:471</div><div class="line">    throw err;</div><div class="line">    ^</div><div class="line"></div><div class="line">Error: Cannot find module <span class="string">'E:\exe\test.js'</span></div><div class="line">    at Function.Module._resolveFilename (module.js:469:15)</div><div class="line">    at Function.Module._load (module.js:417:25)</div><div class="line">    at Module.runMain (module.js:604:10)</div><div class="line">    at run (bootstrap_node.js:394:7)</div><div class="line">    at startup (bootstrap_node.js:149:9)</div><div class="line">    at bootstrap_node.js:509:3</div></pre></td></tr></table></figure>
+<p>所以我们把批处理改成这样（同时为了后面测试方便，我们多输出了2个参数）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@<span class="built_in">echo</span> off</div><div class="line"><span class="built_in">echo</span> %<span class="built_in">cd</span>%</div><div class="line"><span class="built_in">echo</span> %~dpf0</div><div class="line">node %~dp0%test.js</div><div class="line">pause</div></pre></td></tr></table></figure>
+<p>运行之后正常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">E:\exe&gt;call D:\<span class="built_in">test</span>\test.bat</div><div class="line">E:\exe</div><div class="line">D:\<span class="built_in">test</span>\test.bat</div><div class="line">当前工作目录：E:\exe</div><div class="line">请按任意键继续. . .</div></pre></td></tr></table></figure>
+<h2 id="尝试使用好压打包成exe"><a href="#尝试使用好压打包成exe" class="headerlink" title="尝试使用好压打包成exe"></a>尝试使用好压打包成exe</h2><p>使用好压的自解压模式可以轻松将批处理打包成exe（下图为900多kb的gif，耐心等待加载）：</p>
+<p><img src="http://image.liuxianan.com/201707/20170727_163238_518_3340.gif" alt="使用好压打包exe"></p>
+<p>只可惜打包之后，它的工作目录默认是解压的临时目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">当前工作目录：C:\Users\Administrator\AppData\Local\Temp\HZ<span class="variable">$D</span>.816.1632</div><div class="line">请按任意键继续. . .</div></pre></td></tr></table></figure>
+<p>尝试了一番还是没找到解决办法，所以只能放弃了，如果有人知道还烦请告知。</p>
+<h2 id="使用第三方工具"><a href="#使用第三方工具" class="headerlink" title="使用第三方工具"></a>使用第三方工具</h2><p>我使用了一个叫<a href="http://www.pc6.com/softview/SoftView_31106.html" target="_blank" rel="external">Bat To Exe Converter</a>的工具：</p>
+<p><img src="http://image.liuxianan.com/201707/20170727_151345_112_3422.png" alt=""></p>
+<p><img src="http://image.liuxianan.com/201707/20170727_151402_027_8982.png" alt=""></p>
+<p><img src="http://image.liuxianan.com/201707/20170727_151414_892_9578.png" alt=""></p>
+<p>配置好以上几步之后，点击左下角的编译就OK了：</p>
+<p><img src="http://image.liuxianan.com/201707/20170727_160359_291_3179.png" alt=""></p>
+<p>为了对比，我们把双击生成的test.exe也移到<code>E:\exe</code>下面测试：</p>
+<p><img src="http://image.liuxianan.com/201707/20170727_154210_243_1912.png" alt=""></p>
+<p>可以发现，这个工具把<code>%cd%</code>和<code>%~dpf0</code>和普通方式对调了一下，工作目录是临时目录，而<code>%0</code>却成了启动exe的路径，好吧，这样也没关系，我们这样改造一番就OK了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@<span class="built_in">echo</span> off</div><div class="line">:: 将当前目录保存起来</div><div class="line"><span class="built_in">set</span> tempPath=%<span class="built_in">cd</span>%</div><div class="line">:: 定位到exe所在目录</div><div class="line">%~d0</div><div class="line"><span class="built_in">cd</span> %~dp0</div><div class="line">:: 执行临时目录的js文件</div><div class="line">node %tempPath%\test.js</div><div class="line">pause</div></pre></td></tr></table></figure>
+<p><img src="http://image.liuxianan.com/201707/20170727_155429_501_8294.png" alt=""></p>
+<p>至此，我们完美地解决了最开始说的第4点问题^_^。</p>
+<h1 id="实例：nginx配置文件监听工具"><a href="#实例：nginx配置文件监听工具" class="headerlink" title="实例：nginx配置文件监听工具"></a>实例：nginx配置文件监听工具</h1><p>别整些没用的，我们来点实际的。实际工作中经常需要改动nginx配置文件，每次改完都需要reload一下感觉很麻烦，于是简单写了个配置文件监听工具，一改动就自动刷新，代码如下：</p>
+<p>nginx-conf-watcher.js：</p>
+<p>```js<br>const fs = requir</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nodejs-exe/" rel="tag"># nodejs,exe</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/27/windows-nginx-server/" rel="next" title="Windows下将nginx配置成服务并设置开机自启动">
+                <i class="fa fa-chevron-left"></i> Windows下将nginx配置成服务并设置开机自启动
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/22/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <p class="site-author-name" itemprop="name">liyongchun</p>
+            <p class="site-description motion-element" itemprop="description">用于记录工作、学习中的点滴收获</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/liyongchun168" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:liyongchun168@yeah.net" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正式开始"><span class="nav-number">2.</span> <span class="nav-text">正式开始</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目标"><span class="nav-number">2.1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试文件"><span class="nav-number">2.2.</span> <span class="nav-text">测试文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#批处理封装"><span class="nav-number">2.3.</span> <span class="nav-text">批处理封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#尝试使用好压打包成exe"><span class="nav-number">2.4.</span> <span class="nav-text">尝试使用好压打包成exe</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用第三方工具"><span class="nav-number">2.5.</span> <span class="nav-text">使用第三方工具</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例：nginx配置文件监听工具"><span class="nav-number">3.</span> <span class="nav-text">实例：nginx配置文件监听工具</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liyongchun</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
