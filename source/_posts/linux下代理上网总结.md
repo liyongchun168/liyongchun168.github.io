@@ -11,7 +11,7 @@ author: liyongchun
 linux下通过代理上网比较麻烦，各种应用都需要单独设置，现将各种情况汇总一下，方便自己也方便他人，这里以CentOS7.2为例进行介绍。
 
  
-# 全局代理设置
+#o 全局代理设置
 打开profile文件
 ```bash
 vim /etc/profile
@@ -21,7 +21,7 @@ vim /etc/profile
 http_proxy=http://username:password@yourproxy:808
 https_proxy=https://username:password@yourproxy:808
 export http_proxy
-export http_proxy
+export https_proxy
 ```
 # yum代理设置
 打开yum的配置文件
@@ -63,5 +63,15 @@ vim ~/.gitconfig
 [url "https://github.com/"]
 	insteadOf = git@github.com:
 ```
-
-
+# pip代理设置
+使用全局设置,打开/etc/profile
+```bash
+vim /etc/profile
+```
+添加如下内容：
+```
+http_proxy=http://username:password@yourproxy:808
+https_proxy=https://username:password@yourproxy:808
+export http_proxy
+export https_proxy
+```
