@@ -8,10 +8,17 @@ author: liyongchun
 ---
 
 # 前言
-linux下通过代理上网比较麻烦，各种应用都需要单独设置，现将各种情况汇总一下，方便自己也方便他人，这里以CentOS7.2为例进行介绍。
+linux下通过代理上网比较麻烦，现将各种情况汇总一下，方便自己也方便他人，这里以CentOS7.2为例进行介绍。
 
- 
-#o 全局代理设置
+# 全系统代理设置
+编辑/etc/environment文件
+```bash
+http_proxy=http://username:password@yourproxy:808
+https_proxy=https://username:password@yourproxy:808
+```
+设置完后重启系统，配置才会生效。
+
+# 全局代理设置
 打开profile文件
 ```bash
 vim /etc/profile
