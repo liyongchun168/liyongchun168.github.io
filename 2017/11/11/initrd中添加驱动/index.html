@@ -57,7 +57,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="linux,proxy,setting," />
+  <meta name="keywords" content="linux,driver,initrd," />
 
 
 
@@ -73,18 +73,18 @@
 
 
 
-<meta name="description" content="本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/2017/09/22/linux下代理上网总结/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！">
-<meta name="keywords" content="linux,proxy,setting">
+<meta name="description" content="本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！">
+<meta name="keywords" content="linux,driver,initrd">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux下代理上网总结">
-<meta property="og:url" content="http://yoursite.com/2017/09/22/linux下代理上网总结/index.html">
+<meta property="og:title" content="initrd中添加驱动">
+<meta property="og:url" content="http://yoursite.com/2017/11/11/initrd中添加驱动/index.html">
 <meta property="og:site_name" content="liyongchun">
-<meta property="og:description" content="本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/2017/09/22/linux下代理上网总结/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！">
+<meta property="og:description" content="本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-05T12:29:35.982Z">
+<meta property="og:updated_time" content="2017-11-11T08:41:03.256Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux下代理上网总结">
-<meta name="twitter:description" content="本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/2017/09/22/linux下代理上网总结/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！">
+<meta name="twitter:title" content="initrd中添加驱动">
+<meta name="twitter:description" content="本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！">
 
 
 
@@ -114,13 +114,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/22/linux下代理上网总结/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/11/initrd中添加驱动/"/>
 
 
 
 
 
-  <title>linux下代理上网总结 | liyongchun</title>
+  <title>initrd中添加驱动 | liyongchun</title>
   
 
 
@@ -227,7 +227,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/22/linux下代理上网总结/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/11/initrd中添加驱动/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="liyongchun">
@@ -244,7 +244,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">linux下代理上网总结</h1>
+          <h1 class="post-title" itemprop="name headline">initrd中添加驱动</h1>
         
 
         <div class="post-meta">
@@ -256,8 +256,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-22T19:10:39+08:00">
-                2017-09-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-11T15:10:39+08:00">
+                2017-11-11
               </time>
             
 
@@ -303,7 +303,7 @@
 
           
               <div class="post-description">
-                  本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/2017/09/22/linux下代理上网总结/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！
+                  本文首发于http://liyongchun168.github.io,原文地址：http://liyongchun168.github.io/,转载请注明署名“liyongchun”并在显眼位置保留原文连接，谢谢！
               </div>
           
 
@@ -320,20 +320,9 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>linux下通过代理上网比较麻烦，现将各种情况汇总一下，方便自己也方便他人，这里以CentOS7.2为例进行介绍。</p>
-<h1 id="全系统代理设置"><a href="#全系统代理设置" class="headerlink" title="全系统代理设置"></a>全系统代理设置</h1><p>编辑/etc/environment文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http_proxy=http://username:password@yourproxy:808</div><div class="line">https_proxy=https://username:password@yourproxy:808</div></pre></td></tr></table></figure></p>
-<p>设置完后重启系统，配置才会生效。</p>
-<h1 id="全局代理设置"><a href="#全局代理设置" class="headerlink" title="全局代理设置"></a>全局代理设置</h1><p>打开profile文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/profile</div></pre></td></tr></table></figure></p>
-<p>添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http_proxy=http://username:password@yourproxy:808</div><div class="line">https_proxy=https://username:password@yourproxy:808</div><div class="line">export http_proxy</div><div class="line">export https_proxy</div></pre></td></tr></table></figure></p>
-<h1 id="yum代理设置"><a href="#yum代理设置" class="headerlink" title="yum代理设置"></a>yum代理设置</h1><p>打开yum的配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/yum.conf</div></pre></td></tr></table></figure></p>
-<p>添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">proxy=http://username:password@yourproxy:808</div></pre></td></tr></table></figure></p>
-<h1 id="wget代理设置"><a href="#wget代理设置" class="headerlink" title="wget代理设置"></a>wget代理设置</h1><p>打开wget的配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim ~/.wgetrc</div></pre></td></tr></table></figure></p>
-<p>添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">https_proxy = http://username:password@yourproxy:808/</div><div class="line">http_proxy = http://username:password@yourproxy:808/</div><div class="line">ftp_proxy = http://username:password@yourproxy:808/</div></pre></td></tr></table></figure></p>
-<p>并将proxy打开<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#If you do not want to use proxy at all, set this to off.</div><div class="line">use_proxy = on</div></pre></td></tr></table></figure></p>
-<h1 id="git代理设置"><a href="#git代理设置" class="headerlink" title="git代理设置"></a>git代理设置</h1><p>打开git的配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim ~/.gitconfig</div></pre></td></tr></table></figure></p>
-<p>添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[http]</div><div class="line">	proxy = http://username:password@yourproxy:808/</div><div class="line">[https]</div><div class="line">	proxy = https://username:password@yourproxy:808/</div><div class="line">[url &quot;https://github.com/&quot;]</div><div class="line">	insteadOf = git@github.com:</div></pre></td></tr></table></figure></p>
-<h1 id="pip代理设置"><a href="#pip代理设置" class="headerlink" title="pip代理设置"></a>pip代理设置</h1><p>使用全局设置,打开/etc/profile<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/profile</div></pre></td></tr></table></figure></p>
-<p>添加如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http_proxy=http://username:password@yourproxy:808</div><div class="line">https_proxy=https://username:password@yourproxy:808</div><div class="line">export http_proxy</div><div class="line">export https_proxy</div></pre></td></tr></table></figure></p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>通过向initrd中添加驱动，实现旧的linux系统对新的硬件的支持，本文以CentOS7.2为例。</p>
+<h1 id="解压initrd-img文件"><a href="#解压initrd-img文件" class="headerlink" title="解压initrd.img文件"></a>解压initrd.img文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xz -dc initrd.img | cpio -id</div></pre></td></tr></table></figure>
+<h1 id="压缩initrd-img文件"><a href="#压缩initrd-img文件" class="headerlink" title="压缩initrd.img文件"></a>压缩initrd.img文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find . | cpio -c -o | xz -9 --format=lzma &gt; ../initrd.img</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -351,7 +340,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/linux-proxy-setting/" rel="tag"># linux,proxy,setting</a>
+            <a href="/tags/linux-driver-initrd/" rel="tag"># linux,driver,initrd</a>
           
         </div>
       
@@ -364,8 +353,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/22/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2017/10/28/Ubuntu使用笔记/" rel="next" title="Ubuntu使用笔记">
+                <i class="fa fa-chevron-left"></i> Ubuntu使用笔记
               </a>
             
           </div>
@@ -374,8 +363,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/10/28/python学习笔记/" rel="prev" title="python学习笔记">
-                python学习笔记 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/02/07/BIOS选项分析/" rel="prev" title="BIOS选项分析">
+                BIOS选项分析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -523,7 +512,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全系统代理设置"><span class="nav-number">2.</span> <span class="nav-text">全系统代理设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全局代理设置"><span class="nav-number">3.</span> <span class="nav-text">全局代理设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yum代理设置"><span class="nav-number">4.</span> <span class="nav-text">yum代理设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wget代理设置"><span class="nav-number">5.</span> <span class="nav-text">wget代理设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git代理设置"><span class="nav-number">6.</span> <span class="nav-text">git代理设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pip代理设置"><span class="nav-number">7.</span> <span class="nav-text">pip代理设置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解压initrd-img文件"><span class="nav-number">2.</span> <span class="nav-text">解压initrd.img文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#压缩initrd-img文件"><span class="nav-number">3.</span> <span class="nav-text">压缩initrd.img文件</span></a></li></ol></div>
             
 
           </div>
